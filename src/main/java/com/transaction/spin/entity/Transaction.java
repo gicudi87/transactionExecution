@@ -20,7 +20,7 @@ public class Transaction {
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	@Column(name = "ID", updatable = false, nullable = false)
-	private UUID id;
+	private UUID uuid;
 	
 	@Column(name = "ACCOUNT_ID")
 	private String accountId;
@@ -48,5 +48,23 @@ public class Transaction {
 	
 	@Column(name = "CREATED_AT")
 	private String createdAt; 
-
+	
+	@Column(name = "CODE")
+	private String code;
+	
+//	public Transaction(UUID uuid, String accountId, String type, Double amount, String currency, String description, String status
+//					, String providerTransactionId,	Double balanceAfter, String createdAt, String code) {
+//		this.uuid = uuid;
+//		this.accountId = accountId;
+//		this.type =  type;
+//		this.amount = amount;
+//		this.currency = currency;
+//		this.description = description;
+//		this.status = status;
+//		this.providerTransactionId = providerTransactionId;
+//		this.balanceAfter = balanceAfter;
+//		this.createdAt = createdAt;
+//		this.code = code;
+//		
+//	}
 }

@@ -10,18 +10,16 @@ import com.google.gson.Gson;
 import com.transaction.spin.dtos.TransactionReqProviderDto;
 
 @Component
-public class WebClientPost {
+public class WebClientPost {	
 	
-	private static final String urlProvider = "/provider/v1/execute";
-
-	private final WebClient webClient = WebClient.builder()
-			.baseUrl(urlProvider)
-			.defaultHeader("Content-Type", "application/json")
-			.build();
 	
-	public <T> T transactionConsult(TransactionReqProviderDto tranProviderDto, Class<T> classOut){
+	public <T> T transactionConsult(String url, TransactionReqProviderDto tranProviderDto, Class<T> classOut){
 		return new Gson().fromJson(
-		     webClient.post()
+			WebClient.builder()
+		        .baseUrl(url)
+				.defaultHeader("Content-Type", "application/json")
+				.build()
+				.post()
 				.body(BodyInserters.fromValue(tranProviderDto))
 				.exchangeToMono(clientResponse -> {
 					return clientResponse.bodyToMono(String.class);

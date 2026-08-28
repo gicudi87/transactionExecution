@@ -9,5 +9,6 @@ import com.transaction.spin.entity.Transaction;
 
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, UUID>{
+	
 
 }
