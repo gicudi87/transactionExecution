@@ -14,12 +14,8 @@ import reactor.core.publisher.Mono;
 @Component
 public class WebClientPost {	
 	
-	private final WebClient webClient;
+	private final WebClient webClient = WebClient.builder().build();
 	private final Gson gson = new Gson();
-
-	public WebClientPost(WebClient.Builder webClientBuilder) {
-		this.webClient = webClientBuilder.build();
-	}
 	
 	public <T> Mono<T> transactionConsult(String url, TransactionReqProviderDto tranProviderDto, Class<T> classOut) {
 		return webClient.post()
