@@ -131,4 +131,5 @@ transactionExecution/
     Docker:
 		-Se uso docker para la creacion de la DB de postgresql, por su facilidad y utilidad de contenedores.
 	
-
+## Uso de IA
+	Se uso la IA para resolver dudas y debugging.
