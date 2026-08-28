@@ -16,6 +16,8 @@ import com.transaction.spin.entity.Transaction;
 import com.transaction.spin.service.TransactionService;
 
 import jakarta.validation.Valid;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/api/transacciones")
@@ -33,16 +35,19 @@ public class TransactionController {
       * @return Transaction
       */
 	@PostMapping
-	public @ResponseBody ResponseEntity<Transaction> transactionsRequest(@RequestBody @Valid TransactionRequestDto tranRequestDto) {
+	public @ResponseBody Mono<ResponseEntity<Transaction>> transactionsRequest(@RequestBody @Valid TransactionRequestDto tranRequestDto) {
 		//Consume el servicio para la consulta de transaccion
-		Transaction resp = transactionService.processTransaccion(tranRequestDto);
+		return transactionService.processTransaccion(tranRequestDto)
+				.map(resp -> {
+					//Valida el estatus de la respuesta y según el estatus devuelve conflicto o aceptada
+					if("REJECTED".equals(resp.getStatus())) {
+						return ResponseEntity.status(HttpStatus.CONFLICT).body(resp);
+					}
+					//Cuando el estatus es  APPROVED devuelve estatus de ACCEPTED
+					return ResponseEntity.status(HttpStatus.ACCEPTED).body(resp);
+				});
 		
-		//Valida el estatus de la respuesta y según el estatus devuelve conflicto o aceptada
-		if(resp.getStatus() == "REJECTED") {
-			return ResponseEntity.status(HttpStatus.CONFLICT).body(resp);
-		}
-		//Cuando el estatus es  APPROVED devuelve estatus de ACCEPTED
-		return ResponseEntity.status(HttpStatus.ACCEPTED).body(resp);
+		
 	}
 	
 
@@ -50,19 +55,12 @@ public class TransactionController {
 	 * Servicio para la consulta de todas las transacciones realizadas y que se han almacenado
 	 * con sus diferentes estatus de aprobadas y rechazadas
 	 * 
-	 * @return List<Transaction> Devuelve una lista de todas las transacciones
+	 * @return Flux<Transaction> Devuelve un flujo con todas las transacciones
 	 */
 	@GetMapping
-	public @ResponseBody ResponseEntity<List<Transaction>> getTransaction(){
-		//Consulta el servicio de una transaccion por ID
-		List<Transaction> trans = transactionService.getAllTransaction();
-		
-		//Valida el resultado de la transaccion, si es null devuelve un estatus de conflicto
-		if(trans == null) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).body(trans);
-		}
-		
-		//Cuando no es null devuelve estatus de ACCEPTED
+	public @ResponseBody ResponseEntity<Flux<Transaction>> getTransaction(){
+		//Consulta el servicio de todas las transacciones
+		Flux<Transaction> trans = transactionService.getAllTransaction();
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(trans);
 	}
 }

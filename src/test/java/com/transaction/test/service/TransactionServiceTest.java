@@ -24,6 +24,8 @@ import com.transaction.spin.utils.Utils;
 import com.transaction.spin.utils.WebClientPost;
 
 import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Flux;
+import reactor.test.StepVerifier;
 
 @Slf4j
 @ExtendWith(MockitoExtension.class)
@@ -50,9 +52,12 @@ public class TransactionServiceTest {
     void transaccionMontoMinimo() {
         TransactionRequestDto request = buildRequest(0.50, "CREDITO", Utils.CURRENCY);
 
-        Transaction resultado = transactionService.processTransaccion(request);
+        StepVerifier.create(transactionService.processTransaccion(request))
+        .assertNext(resultado ->
+                org.assertj.core.api.Assertions.assertThat(resultado.getCode())
+                        .isEqualTo("amount debe ser mayor que " + Utils.MIN_AMOUNT))
+        .verifyComplete();
 
-        assertThat(resultado.getCode()).isEqualTo("amount debe ser mayor que " + Utils.MIN_AMOUNT);
         verifyNoInteractions(transactionRepository);
         verifyNoInteractions(webClientPost);
     }
@@ -61,10 +66,12 @@ public class TransactionServiceTest {
     void transaccionmontoMayorDebito() {
         TransactionRequestDto request = buildRequest(15000.0, Utils.TYPE_DEBIT, Utils.CURRENCY);
 
-        Transaction resultado = transactionService.processTransaccion(request);
-
-        assertThat(resultado.getCode())
-                .isEqualTo("el monto de tarjetas de debito debe ser menor o igual que " + Utils.MAX_AMOUNT);
+        StepVerifier.create(transactionService.processTransaccion(request))
+        .assertNext(resultado ->
+                org.assertj.core.api.Assertions.assertThat(resultado.getCode())
+                        .isEqualTo("el monto de tarjetas de debito debe ser menor o igual que " + Utils.MAX_AMOUNT))
+        .verifyComplete();
+        
         verifyNoInteractions(transactionRepository);
         verifyNoInteractions(webClientPost);
     }
@@ -73,9 +80,12 @@ public class TransactionServiceTest {
     void transaccionmonedaMXN() {
         TransactionRequestDto request = buildRequest(100.0, "CREDITO", "USD");
 
-        Transaction resultado = transactionService.processTransaccion(request);
-
-        assertThat(resultado.getCode()).isEqualTo("solo se acepta el tipo de moneda " + Utils.CURRENCY);
+        StepVerifier.create(transactionService.processTransaccion(request))
+        .assertNext(resultado ->
+                org.assertj.core.api.Assertions.assertThat(resultado.getCode())
+                        .isEqualTo("solo se acepta el tipo de moneda " + Utils.CURRENCY))
+        .verifyComplete();
+        
         verifyNoInteractions(transactionRepository);
         verifyNoInteractions(webClientPost);
     }
@@ -84,22 +94,22 @@ public class TransactionServiceTest {
 	@Test
 	void getAllListTransaction() {
 		
-		List<Transaction> transacciones = Arrays.asList(new Transaction(), new Transaction());
-        when(transactionRepository.findAll()).thenReturn(transacciones);
+        when(transactionRepository.findAll()).thenReturn(Flux.just(new Transaction(), new Transaction()));
 
-        List<Transaction> resultado = transactionService.getAllTransaction();
-
-        assertThat(resultado).hasSize(2);
+        StepVerifier.create(transactionService.getAllTransaction())
+	        .expectNextCount(2)
+	        .verifyComplete();
+        
         verify(transactionRepository, times(1)).findAll();
 		
 	}
 	
 	@Test
     void getAllTransactionEmpty() {
-        when(transactionRepository.findAll()).thenReturn(List.of());
+        when(transactionRepository.findAll()).thenReturn(Flux.empty());
 
-        List<Transaction> resultado = transactionService.getAllTransaction();
-
-        assertThat(resultado).isEmpty();
+        StepVerifier.create(transactionService.getAllTransaction())
+	        .expectNextCount(0)
+	        .verifyComplete();
     }
 }
