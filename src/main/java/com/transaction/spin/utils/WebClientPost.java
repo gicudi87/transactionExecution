@@ -17,6 +17,7 @@ public class WebClientPost {
 	private final WebClient webClient = WebClient.builder().build();
 	private final Gson gson = new Gson();
 	
+	//Metodo para la creacion y armar el webClient para realizar la peticion al provedor
 	public <T> Mono<T> transactionConsult(String url, TransactionReqProviderDto tranProviderDto, Class<T> classOut) {
 		return webClient.post()
 				.uri(url)
