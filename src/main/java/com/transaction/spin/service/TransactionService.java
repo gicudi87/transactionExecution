@@ -46,7 +46,7 @@ public class TransactionService {
 		}
 
 		//Valida el monto maximo de tarjetas de debito, no debe exeder a $10,000.00
-		if(tranRequestDto.getAmount() > Utils.MAX_AMOUNT && tranRequestDto.getType() == Utils.TYPE_DEBIT) {
+		if(tranRequestDto.getAmount() > Utils.MAX_AMOUNT && tranRequestDto.getType().equals(Utils.TYPE_DEBIT)) {
 			log.info("el monto de tarjetas de debito debe ser menor o igual que "+Utils.MAX_AMOUNT);
 			Transaction transaction = new Transaction();
 			transaction.setCode("el monto de tarjetas de debito debe ser menor o igual que "+Utils.MAX_AMOUNT);

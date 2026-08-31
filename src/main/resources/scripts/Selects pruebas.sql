@@ -1,0 +1,3 @@
+INSERT INTO transaction (id,account_id,"type",amount,currency,description,status,provider_transaction_id,balance_after,created_at,code) VALUES
+	 ('2f54994b-99b0-49c0-98eb-9f11990ba523'::uuid,'acc-123456','DEBIT',10000.0,'MXN','Transferencia fallida','FAILED',NULL,NULL,NULL,NULL),
+	 ('dd750a19-de8a-424f-ad67-7d4774727fa7'::uuid,'acc-123456','DEBIT',9000.0,'MXN','Transferencia fallida','FAILED',NULL,NULL,NULL,NULL);

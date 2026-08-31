@@ -2,50 +2,51 @@ package com.transaction.spin.entity;
 
 import java.util.UUID;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
-import jakarta.persistence.Id;
+
 import lombok.Getter;
 import lombok.Setter;
 
-@Table("TRANSACTION")
+@Table("transaction")
 @Getter
 @Setter
 public class Transaction {
 	
 	@Id
-	@Column("ID")
+	@Column("id")
 	private UUID uuid;
 	
-	@Column("ACCOUNT_ID")
+	@Column("account_id")
 	private String accountId;
 	
-	@Column("TYPE")
+	@Column("type")
 	private String type;
 	
-	@Column("AMOUNT")
+	@Column("amount")
 	private Double amount;
 	
-	@Column("CURRENCY")
+	@Column("currency")
 	private String currency;
 	
-	@Column("DESCRIPTION")
+	@Column("description")
 	private String description;
 	
-	@Column("STATUS")
+	@Column("status")
 	private String status;
 	
-	@Column("PROVIDER_TRANSACTION_ID")
+	@Column("provider_transaction_id")
 	private String providerTransactionId;
 	
-	@Column("BALANCE_AFTER")
+	@Column("balance_after")
 	private Double balanceAfter;
 	
-	@Column("CREATED_AT")
+	@Column("created_at")
 	private String createdAt; 
 	
-	@Column("CODE")
+	@Column("code")
 	private String code;
 	
 }

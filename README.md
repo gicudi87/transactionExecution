@@ -23,26 +23,27 @@ Servicio de transacciones financieras construido con **Java 17**, **Spring WebFl
 
 ### `application.yml` (ejemplo)
 
-```yaml
-spring:
-  r2dbc:
-    url: r2dbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:transactions_db}
-    username: ${DB_USER:postgres}
-    password: ${DB_PASSWORD:postgres}
+```application.properties
+spring.r2dbc.url=r2dbc:postgresql://localhost:5432/financial_db
+spring.r2dbc.username=us3r4dm1n
+spring.r2dbc.password=4dm1npa55
+
 
 server:
-  port: ${SERVER_PORT:8080}
+  port: ${localhost:8080}
 ```
-
+## Instalacion de Docker en Windows
+Docker Desktop for Windows(https://docs.docker.com/desktop/setup/install/windows-install/) is installed and running	
+	
 ## Levantar PostgreSQL con Docker
 
 ```bash
 docker run --name transactions-postgres \
-  -e POSTGRES_DB=transactions_db \
-  -e POSTGRES_USER=postgres \
-  -e POSTGRES_PASSWORD=postgres \
+  -e POSTGRES_DB=financial_db \
+  -e POSTGRES_USER=us3r4dm1n \
+  -e POSTGRES_PASSWORD=4dm1npa55 \
   -p 5432:5432 \
-  -d postgres:16
+  -d postgres:17
 ```
 
 ## Ejecución del proyecto
@@ -99,6 +100,7 @@ transactionExecution/
 |	|	|	|	|-service/				# Logica del negocio
 |	|	|	|	|-utils/				# Utilidades y mapeos
 |	|	|-resources/
+|	|	|	|-scripts
 |	|-test/
 |	|	|-java/
 |	|	|	|-com/transaction/test/
