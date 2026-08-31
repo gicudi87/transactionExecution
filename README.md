@@ -134,4 +134,5 @@ transactionExecution/
 		-Se uso docker para la creacion de la DB de postgresql, por su facilidad y utilidad de contenedores.
 	
 ## Uso de IA
-	Se uso la IA para resolver dudas y debugging.
+	Claude para resolver dudas, debugging. 
+	Gemini para ver temas de versiones de librerias.
